@@ -1,89 +1,216 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Concept Energies – Demande de Matériel</title>
-  <style>
-    :root{--accent:#16f2c3;--accent2:#00cfa3;--text:#eafff9;--muted:#9bded0;}
-    body{margin:0;font-family:system-ui,Arial;background:linear-gradient(180deg,#020404,#050708);color:var(--text);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:14px;box-sizing:border-box}
-    .app{width:460px;max-width:100%;background:rgba(15,22,32,.8);border-radius:18px;border:1px solid rgba(22,242,195,.4);box-shadow:0 0 30px rgba(22,242,195,.25);padding:18px}
-    h1{margin:0 0 8px;text-align:center;color:var(--accent);letter-spacing:1px;font-size:18px}
-    p{margin:0 0 12px;text-align:center;color:var(--muted);font-size:13px}
-    label{display:block;margin-top:12px;font-size:14px}
-    input,textarea,select{width:100%;margin-top:6px;padding:10px;border-radius:10px;border:none;background:#0a1317;color:white;font-size:14px;box-sizing:border-box}
-    textarea{resize:none;height:78px}
-    button{margin-top:12px;width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#002b22;font-size:16px;font-weight:800;cursor:pointer}
-    .secondary{background:#0a1317;color:var(--text);border:1px solid rgba(22,242,195,.25)}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept Energies – Demande de matériel</title>
+
+<style>
+:root{
+  --bg:#050708;
+  --panel:#0b1114;
+  --accent:#16f2c3;
+  --accent2:#00cfa3;
+  --text:#eafff9;
+  --muted:#9bded0;
+  --danger:#ff4d4d;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:system-ui, Arial, sans-serif;
+  background:linear-gradient(180deg,#020404,#050708);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  padding:20px;
+  min-height:100vh;
+}
+
+.app{
+  width:460px;
+  max-width:100%;
+  background:rgba(15,22,32,.85);
+  border-radius:20px;
+  border:1px solid rgba(22,242,195,.45);
+  box-shadow:0 0 35px rgba(22,242,195,.25);
+  padding:20px;
+}
+
+/* LOGO */
+.logo{
+  width:240px;
+  max-width:90%;
+  display:block;
+  margin:10px auto 12px;
+}
+
+/* TEXT */
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:14px;
+}
+
+/* FORM */
+label{
+  display:block;
+  margin-top:14px;
+  font-size:14px;
+}
+
+input, textarea, select{
+  width:100%;
+  margin-top:6px;
+  padding:11px;
+  border-radius:10px;
+  border:none;
+  background:#0a1317;
+  color:white;
+  font-size:14px;
+}
+
+textarea{
+  resize:none;
+  height:80px;
+}
+
+/* BUTTONS */
+button{
+  margin-top:14px;
+  width:100%;
+  padding:13px;
+  border-radius:14px;
+  border:none;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.btn-main{
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  color:#002b22;
+}
+
+.btn-secondary{
+  background:#0a1317;
+  color:var(--text);
+  border:1px solid rgba(22,242,195,.3);
+}
+
+.btn-danger{
+  background:#3a0d0d;
+  color:#fff;
+  border:1px solid rgba(255,80,80,.6);
+}
+
+button:hover{opacity:.9;}
+
+.note{
+  margin-top:12px;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+}
+</style>
 </head>
+
 <body>
-  <div class="app">
-    <h1>⚡ CONCEPT ENERGIES</h1>
-    <p>Demande matériel → WhatsApp</p>
 
-    <label>Ouvrier</label>
-    <input id="worker" placeholder="Nom de l'ouvrier" />
+<div class="app">
 
-    <label>Chantier</label>
-    <input id="site" placeholder="Nom ou numéro du chantier" />
+  <!-- LOGO -->
+  <img src="logo.png" class="logo" alt="Concept Energies">
 
-    <label>Type de matériel</label>
-    <select id="type">
-      <option>Câbles</option><option>Tableau électrique</option><option>Disjoncteurs</option>
-      <option>Gaines</option><option>Éclairage</option><option>Outillage</option><option>Autre</option>
-    </select>
-
-    <label>Urgence</label>
-    <button id="urgentBtn" class="secondary" type="button">🚨 Urgence : NON</button>
-
-    <label>Détail / quantité</label>
-    <textarea id="details" placeholder="Ex: câble 3G2.5 – 100m"></textarea>
-
-    <button id="sendBtn" type="button">📲 Envoyer sur WhatsApp</button>
+  <div class="subtitle">
+    Demande de matériel chantier – WhatsApp
   </div>
 
-  <script>
-    const WHATSAPP_PHONE = "352621515160"; // sans +
+  <label>Ouvrier</label>
+  <input id="worker" placeholder="Nom de l'ouvrier">
 
-    let isUrgent = false;
+  <label>Chantier</label>
+  <input id="site" placeholder="Nom ou numéro du chantier">
 
-    const urgentBtn = document.getElementById("urgentBtn");
-    urgentBtn.addEventListener("click", () => {
-      isUrgent = !isUrgent;
-      urgentBtn.textContent = isUrgent ? "🚨 Urgence : OUI (aujourd’hui)" : "🚨 Urgence : NON";
-    });
+  <label>Type de matériel</label>
+  <select id="type">
+    <option>Câbles</option>
+    <option>Tableau électrique</option>
+    <option>Disjoncteurs</option>
+    <option>Gaines</option>
+    <option>Éclairage</option>
+    <option>Outillage</option>
+    <option>Autre</option>
+  </select>
 
-    const sendBtn = document.getElementById("sendBtn");
-    sendBtn.addEventListener("click", () => {
-      const worker = document.getElementById("worker").value.trim();
-      const site = document.getElementById("site").value.trim();
-      const type = document.getElementById("type").value;
-      const details = document.getElementById("details").value.trim();
+  <label>Urgence</label>
+  <button type="button" id="urgentBtn" class="btn-secondary">
+    🚨 Urgence : NON
+  </button>
 
-      if(!worker || !site || !details){
-        alert("Merci de remplir Ouvrier, Chantier et Détail / quantité");
-        return;
-      }
+  <label>Détail / quantité</label>
+  <textarea id="details" placeholder="Ex : câble 3G2.5 – 100m"></textarea>
 
-      const date = new Date().toLocaleString();
-      const lines = [
-        "⚡ DEMANDE MATERIEL – CONCEPT ENERGIES",
-        isUrgent ? "🚨 URGENT : AUJOURD’HUI" : null,
-        `👷 Ouvrier : ${worker}`,
-        `🏗️ Chantier : ${site}`,
-        `📦 Type : ${type}`,
-        `📝 Détail : ${details}`,
-        `⏰ Date : ${date}`
-      ].filter(Boolean);
+  <button type="button" class="btn-main" id="sendBtn">
+    📲 Envoyer la demande (WhatsApp)
+  </button>
 
-      const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(lines.join("\n"))}`;
-      window.open(url, "_blank");
-    });
-  </script>
-</body>
-</html>
+  <div class="note">
+    La photo peut être envoyée ensuite dans le même message WhatsApp.
+  </div>
 
+</div>
+
+<script>
+const PHONE = "352621515160"; // ton numéro WhatsApp
+let urgent = false;
+
+const urgentBtn = document.getElementById("urgentBtn");
+
+urgentBtn.addEventListener("click", () => {
+  urgent = !urgent;
+  urgentBtn.textContent = urgent
+    ? "🚨 Urgence : OUI (aujourd’hui)"
+    : "🚨 Urgence : NON";
+
+  urgentBtn.className = urgent
+    ? "btn-danger"
+    : "btn-secondary";
+});
+
+document.getElementById("sendBtn").addEventListener("click", () => {
+  const worker = document.getElementById("worker").value.trim();
+  const site = document.getElementById("site").value.trim();
+  const type = document.getElementById("type").value;
+  const details = document.getElementById("details").value.trim();
+
+  if(!worker || !site || !details){
+    alert("Merci de remplir tous les champs.");
+    return;
+  }
+
+  const lines = [
+    "⚡ DEMANDE MATERIEL – CONCEPT ENERGIES",
+    urgent ? "🚨 URGENT AUJOURD’HUI" : "",
+    `👷 Ouvrier : ${worker}`,
+    `🏗️ Chantier : ${site}`,
+    `📦 Type : ${type}`,
+    `📝 Détail : ${details}`,
+    `🕒 ${new Date().toLocaleString()}`
+  ].filter(l => l !== "");
+
+  const url =
+    "https://wa.me/" +
+    PHONE +
+    "?text=" +
+    encodeURIComponent(lines.join("\n"));
+
+  window.open(url, "_blank");
+});
+</script>
 
 </body>
 </html>
