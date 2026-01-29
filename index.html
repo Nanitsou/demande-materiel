@@ -203,21 +203,21 @@ document.getElementById("sendBtn").addEventListener("click", async () => {
   }
 
   // 1) Envoi vers Google Sheets (ne bloque jamais WhatsApp si réseau faible)
-  try{
-    await fetch(SHEET_URL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({
-        worker,
-        site,
-        type,
-        details,
-        urgent: urgent
-      })
-    });
-  }catch(e){
-    console.log("Sheets indisponible, WhatsApp continue.", e);
-  }
+ try{
+  await fetch(SHEET_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      worker,
+      site,
+      type,
+      details,
+      urgent: urgent
+    })
+    // ✅ pas de headers -> évite le CORS preflight
+  });
+}catch(e){
+  console.log("Sheets indisponible, WhatsApp continue.", e);
+}
 
   // 2) WhatsApp
   const lines = [
