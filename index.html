@@ -205,16 +205,16 @@ document.getElementById("sendBtn").addEventListener("click", async () => {
 
   // 1) Envoi vers Google Sheets (ne bloque jamais WhatsApp si réseau faible)
 try{
-  await fetch(SHEET_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      worker,
-      site,
-      type,
-      details,
-      urgent: urgent
+  await const form = document.getElementById("sheetForm");
+
+form.worker.value = worker;
+form.site.value = site;
+form.type.value = type;
+form.details.value = details;
+form.urgent.value = urgent ? "OUI" : "NON";
 
 form.submit();
+
 
     })
     // ✅ pas de headers -> évite le CORS preflight
