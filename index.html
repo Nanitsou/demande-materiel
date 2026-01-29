@@ -198,13 +198,13 @@ document.getElementById("sendBtn").addEventListener("click", () => {
   }
 
   // 1) Envoi Google Sheets via FORM (fiable, pas de CORS)
-  const form = document.getElementById("sheetForm");
-  form.elements["worker"].value = worker;
-  form.elements["site"].value = site;
-  form.elements["type"].value = type;
-  form.elements["details"].value = details;
-  form.elements["urgent"].value = urgent ? "OUI" : "NON";
-  form.submit();
+const form = document.getElementById("sheetForm");
+form.querySelector('input[name="worker"]').value = worker;
+form.querySelector('input[name="site"]').value = site;
+form.querySelector('input[name="type"]').value = type;
+form.querySelector('input[name="details"]').value = details;
+form.querySelector('input[name="urgent"]').value = urgent ? "OUI" : "NON";
+form.submit();
 
   // 2) WhatsApp
   const lines = [
