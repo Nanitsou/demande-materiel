@@ -7,13 +7,10 @@
 
 <style>
 :root{
-  --bg:#050708;
-  --panel:#0b1114;
   --accent:#16f2c3;
   --accent2:#00cfa3;
   --text:#eafff9;
   --muted:#9bded0;
-  --danger:#ff4d4d;
 }
 
 *{box-sizing:border-box;}
@@ -22,13 +19,6 @@ body{
   margin:0;
   font-family:system-ui, Arial, sans-serif;
   background: linear-gradient(180deg,#0f2f2b,#071c1a);
-  color:var(--text);
-  display:flex;
-  justify-content:center;
-  padding:20px;
-  min-height:100vh;
-}
-
   color:var(--text);
   display:flex;
   justify-content:center;
@@ -131,7 +121,6 @@ button:hover{opacity:.9;}
 
 <div class="app">
 
-  <!-- LOGO -->
   <img src="logo.png" class="logo" alt="Concept Energies">
 
   <div class="subtitle">
@@ -168,31 +157,36 @@ button:hover{opacity:.9;}
   </button>
 
   <div class="note">
-    La photo peut être envoyée ensuite dans le même message WhatsApp.
+    La demande est enregistrée dans Sheets + envoyée sur WhatsApp.
   </div>
 
 </div>
 
+<!-- ✅ Formulaire invisible pour Google Sheets (anti-CORS) -->
+<form id="sheetForm"
+      action="https://script.google.com/macros/s/AKfycbweJyEAeDt7-ECYEMxHe0t2WSFhMMnIwRrIKuiagdmYaBuK_IUc77BnIDfn0jRGT4-rJA/exec"
+      method="POST"
+      target="hiddenFrame">
+  <input type="hidden" name="worker">
+  <input type="hidden" name="site">
+  <input type="hidden" name="type">
+  <input type="hidden" name="details">
+  <input type="hidden" name="urgent">
+</form>
+<iframe name="hiddenFrame" style="display:none;"></iframe>
+
 <script>
-const PHONE = "352621515160";
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbweJyEAeDt7-ECYEMxHe0t2WSFhMMnIwRrIKuiagdmYaBuK_IUc77BnIDfn0jRGT4-rJA/exec";
+const PHONE = "352621515160"; // WhatsApp sans +
 let urgent = false;
 
-
 const urgentBtn = document.getElementById("urgentBtn");
-
 urgentBtn.addEventListener("click", () => {
   urgent = !urgent;
-  urgentBtn.textContent = urgent
-    ? "🚨 Urgence : OUI (aujourd’hui)"
-    : "🚨 Urgence : NON";
-
-  urgentBtn.className = urgent
-    ? "btn-danger"
-    : "btn-secondary";
+  urgentBtn.textContent = urgent ? "🚨 Urgence : OUI (aujourd’hui)" : "🚨 Urgence : NON";
+  urgentBtn.className = urgent ? "btn-danger" : "btn-secondary";
 });
 
-document.getElementById("sendBtn").addEventListener("click", async () => {
+document.getElementById("sendBtn").addEventListener("click", () => {
   const worker = document.getElementById("worker").value.trim();
   const site = document.getElementById("site").value.trim();
   const type = document.getElementById("type").value;
@@ -203,25 +197,14 @@ document.getElementById("sendBtn").addEventListener("click", async () => {
     return;
   }
 
-  // 1) Envoi vers Google Sheets (ne bloque jamais WhatsApp si réseau faible)
-try{
-  await const form = document.getElementById("sheetForm");
-
-form.worker.value = worker;
-form.site.value = site;
-form.type.value = type;
-form.details.value = details;
-form.urgent.value = urgent ? "OUI" : "NON";
-
-form.submit();
-
-
-    })
-    // ✅ pas de headers -> évite le CORS preflight
-  });
-}catch(e){
-  console.log("Sheets indisponible, WhatsApp continue.", e);
-}
+  // 1) Envoi Google Sheets via FORM (fiable, pas de CORS)
+  const form = document.getElementById("sheetForm");
+  form.elements["worker"].value = worker;
+  form.elements["site"].value = site;
+  form.elements["type"].value = type;
+  form.elements["details"].value = details;
+  form.elements["urgent"].value = urgent ? "OUI" : "NON";
+  form.submit();
 
   // 2) WhatsApp
   const lines = [
@@ -232,32 +215,13 @@ form.submit();
     `📦 Type : ${type}`,
     `📝 Détail : ${details}`,
     `🕒 ${new Date().toLocaleString()}`
-  ].filter(l => l !== "");
+  ].filter(Boolean);
 
-  const url =
-    "https://wa.me/" +
-    PHONE +
-    "?text=" +
-    encodeURIComponent(lines.join("\n"));
-
+  const url = "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(lines.join("\n"));
   window.open(url, "_blank");
 });
-
 </script>
-  
-<form id="sheetForm"
-      action="https://script.google.com/macros/s/AKfycbweJyEAeDt7-ECYEMxHe0t2WSFhMMnIwRrIKuiagdmYaBuK_IUc77BnIDfn0jRGT4-rJA/exec"
-      method="POST"
-      target="hiddenFrame">
-
-  <input type="hidden" name="worker">
-  <input type="hidden" name="site">
-  <input type="hidden" name="type">
-  <input type="hidden" name="details">
-  <input type="hidden" name="urgent">
-</form>
-
-<iframe name="hiddenFrame" style="display:none;"></iframe>
 
 </body>
 </html>
+
